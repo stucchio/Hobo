@@ -8,7 +8,11 @@ public class Item implements Comparable<Item>{
 	features.addAll(f);
     }
 
-    boolean hasFeatures(Collection<String> feats) {
+    public boolean hasFeatures(Collection<String> feats) {
+	if (feats == null) {
+	    System.out.println("received null features");
+	    return true;
+	}
 	for (String f : feats) {
 	    boolean found = false;
 	    for (String f2 : features) {

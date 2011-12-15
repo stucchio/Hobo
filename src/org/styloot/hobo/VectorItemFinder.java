@@ -3,6 +3,7 @@ package org.styloot.hobo;
 import java.util.*;
 
 import org.styloot.hobo.*;
+import org.styloot.hobo.iterators.FeaturesFilterIterator;
 
 public class VectorItemFinder implements ItemFinder {
     public VectorItemFinder(Collection<Item> myItems) {
@@ -17,6 +18,8 @@ public class VectorItemFinder implements ItemFinder {
 	return new FeaturesFilterIterator(items.iterator(), features);
     };
 
+
+    //Testing
     public static void main(String[] args) {
 	Vector<Item> items = new Vector<Item>();
 	for (int i=0;i<10;i++) {
