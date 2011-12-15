@@ -28,7 +28,6 @@
 
   <target name="thriftcode" depends="init">
     <exec executable="thrift"> <arg value="--gen"/> <arg value="java"/> <arg value="hobo.thrift"/> </exec>
-    <exec executable="build_scripts/remove_slf4j.sh"/>
   </target>
 
   <target name="compile" depends="init,thriftcode">
