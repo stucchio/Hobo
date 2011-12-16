@@ -15,19 +15,9 @@ public class HoboIndex {
 	Map<String,List<Item>> catToItems = categoriesToItems(items);
 	//Now we need to build ItemFinders
 	for (String cat : catToItems.keySet()) {
-	    categoryMap.put(cat, new VectorItemFinder(catToItems.get(cat)));
+	    categoryMap.put(cat, new VectorItemFinder(catToItems.get(cat), cat));
 	}
     }
-
-    public Iterator<Item> findByCategory(String cat) {
-	Vector<Iterator<Item>> iters = new Vector<Iterator<Item>>();
-	for (ItemFinder f : categoryMap.itemFinders(cat)) {
-	    iters.add(f.getItems());
-	}
-	return new CombinedIterator(iters);
-    }
-
-
 
     public Iterator<Item> find(String cat, Collection<String> features) {
 	Vector<Iterator<Item>> iters = new Vector<Iterator<Item>>();
@@ -38,7 +28,6 @@ public class HoboIndex {
 	} else {
 	    categories = categoryMap.values(); //Small performance improvement in case of no category
 	}
-
 	if (features != null && features.size() > 0) {
 	    for (ItemFinder f : categories) {
 		iters.add(f.findItemsWithFeatures(features));

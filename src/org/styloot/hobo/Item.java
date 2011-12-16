@@ -15,13 +15,12 @@ public class Item implements Comparable<Item>{
 
     public boolean hasFeatures(Collection<String> feats) {
 	if (feats == null) {
-	    System.out.println("received null features");
 	    return true;
 	}
 	for (String f : feats) {
 	    boolean found = false;
 	    for (String f2 : features) {
-		if (f == f2) {
+		if (f.equals(f2)) {
 		    found = true;
 		    break;
 		}

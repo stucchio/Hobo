@@ -6,18 +6,20 @@ import org.styloot.hobo.*;
 import org.styloot.hobo.iterators.FeaturesFilterIterator;
 
 public class VectorItemFinder implements ItemFinder {
-    public VectorItemFinder(Collection<Item> myItems) {
+    public VectorItemFinder(Collection<Item> myItems, String cat) {
 	items = new Vector<Item>(myItems);
 	Collections.sort(items);
+	category = cat;
     }
     private Vector<Item> items;
+    private String category;
 
     public Iterator<Item> getItems() {
 	return items.iterator();
     }
 
     public Iterator<Item> findItemsWithFeatures(Collection<String> features) {
-	if (features == null)
+	if (features == null || features.size() == 0)
 	    return items.iterator();
 	return new FeaturesFilterIterator(items.iterator(), features);
     };
@@ -35,12 +37,11 @@ public class VectorItemFinder implements ItemFinder {
 	    items.add(new Item("id" + i, "baz",	f, i));
 	}
 
-	ItemFinder itemFinder = new VectorItemFinder(items);
+	ItemFinder itemFinder = new VectorItemFinder(items, "");
 	Vector<String> f = new Vector<String>();
 	f.add("bar");
 	for (Iterator<Item> i = itemFinder.findItemsWithFeatures(f); i.hasNext(); ) {
 	    Item item = (Item)i.next();
-	    System.out.println(item.id + " -> " + item.quality);
 	}
 
     }
