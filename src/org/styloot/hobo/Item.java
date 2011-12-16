@@ -5,7 +5,7 @@ import java.util.*;
 public class Item implements Comparable<Item>{
     public Item(String i, String c, Collection<String> f, int q) {
 	id = i; category = c; quality = q;
-	features.addAll(f);
+	features = f.toArray(new String[0]);
     }
 
     public boolean hasFeatures(Collection<String> feats) {
@@ -28,10 +28,10 @@ public class Item implements Comparable<Item>{
 	return true;
     }
 
-    public String id;
-    public String category;
-    public Vector<String> features = new Vector<String>();
-    public int quality;
+    public final String id;
+    public final String category;
+    public final String[] features;
+    public final int quality;
 
     public int compareTo(Item o) {
 	if (quality != o.quality) {
