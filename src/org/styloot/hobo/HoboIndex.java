@@ -3,20 +3,26 @@ package org.styloot.hobo;
 import java.util.*;
 import java.io.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.styloot.hobo.*;
 import org.styloot.hobo.iterators.*;
 
 public class HoboIndex {
+    private static final Logger log = LoggerFactory.getLogger(HoboIndex.class);
     public HoboIndex(Collection<Item> items) {
 	this(items.iterator());
     }
 
     public HoboIndex(Iterator<Item> items) {
 	Map<String,List<Item>> catToItems = categoriesToItems(items);
+	log.info("Initializing HoboIndex with " + catToItems.size() + " categories.");
 	//Now we need to build ItemFinders
 	for (String cat : catToItems.keySet()) {
 	    categoryMap.put(cat, new VectorItemFinder(catToItems.get(cat), cat));
 	}
+	log.info("ItemFinders built.");
     }
 
     public Iterator<Item> find(String cat, Collection<String> features) {

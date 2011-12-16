@@ -9,9 +9,9 @@
   <path id="classpath">
         <fileset dir="/usr/lib/jvm/java-6-sun/lib/" includes="**/*.jar"/>
         <fileset dir="/usr/local/lib/" includes="**/*.jar"/>
-        <fileset dir="/usr/lib/hadoop/" includes="**/*.jar"/>
-        <fileset dir="/usr/lib/hadoop/lib/" includes="**/*.jar"/>
         <fileset dir="/usr/local/lib/" includes="libthrift.jar"/>
+        <fileset dir="/usr/share/java/" includes="slf4j-api.jar"/>
+        <fileset dir="/usr/share/java/" includes="slf4j-simple-1.5.11.jar"/>
     </path>
 
 
@@ -28,7 +28,6 @@
 
   <target name="thriftcode" depends="init">
     <exec executable="thrift"> <arg value="--gen"/> <arg value="java"/> <arg value="hobo.thrift"/> </exec>
-    <exec executable="build_scripts/remove_slf4j.sh"/>
   </target>
 
   <target name="compile" depends="init,thriftcode">

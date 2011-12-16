@@ -8,6 +8,9 @@ import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 import java.io.*;
 
@@ -17,6 +20,8 @@ import org.styloot.hobo.*;
 
 
 public class Server {
+    private static final Logger log = LoggerFactory.getLogger(Server.class);
+
     public Server(HoboIndex i, int pt, int ps) {
 	index = i;
 	port = pt;
@@ -33,7 +38,6 @@ public class Server {
             Hobo.Processor processor = new Hobo.Processor(new HoboServerImpl(index, pageSize));
             Factory protFactory = new TBinaryProtocol.Factory(true, true);
             TServer server = new TThreadPoolServer(processor, serverTransport, protFactory);
-            System.out.println("Starting server on port " + port);
             server.serve();
         } catch (TTransportException e) {
             e.printStackTrace();
@@ -41,10 +45,16 @@ public class Server {
     }
 
     public static void main(String args[]) throws IOException {
+	log.info("Loading list of items from " + args[0]);
 	Collection<Item> items = itemsFromInputStream(new BufferedReader(new FileReader(args[0])));
+	log.info("Loaded " + items.size() + " items.");
         HoboIndex index = new HoboIndex(items);
+	log.info("Build HoboIndex.");
 
-        Server srv = new Server(index, Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+	int port = Integer.parseInt(args[1]);
+	int pageSize = Integer.parseInt(args[2]);
+        Server srv = new Server(index, port, pageSize);
+	log.info("Starting HoboServer - listening on port " + port + ", pagesize=" + pageSize);
         srv.start();
     }
 
