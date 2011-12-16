@@ -10,7 +10,11 @@ public class VectorItemFinder implements ItemFinder {
 	items = new Vector<Item>(myItems);
 	Collections.sort(items);
     }
-    public Vector<Item> items;
+    private Vector<Item> items;
+
+    public Iterator<Item> getItems() {
+	return items.iterator();
+    }
 
     public Iterator<Item> findItemsWithFeatures(Collection<String> features) {
 	if (features == null)
