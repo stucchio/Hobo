@@ -8,6 +8,11 @@ public class Item implements Comparable<Item>{
 	features = f.toArray(new String[0]);
     }
 
+    public Item(String i, String c, String[] f, int q) {
+	id = i; category = c; quality = q;
+	features = f;
+    }
+
     public boolean hasFeatures(Collection<String> feats) {
 	if (feats == null) {
 	    System.out.println("received null features");
