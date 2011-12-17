@@ -48,6 +48,7 @@ public class Server {
 	log.info("Loading list of items from " + args[0]);
 	Collection<Item> items = itemsFromInputStream(new BufferedReader(new FileReader(args[0])));
 	log.info("Loaded " + items.size() + " items.");
+	log.info("Items are indexed with " + FeatureRegistry.size() + " features.");
         HoboIndex index = new HoboIndex(items);
 	log.info("Build HoboIndex.");
 

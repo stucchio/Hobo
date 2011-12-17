@@ -8,11 +8,11 @@ import org.styloot.hobo.iterators.FilterIterator;
 public class FeaturesFilterIterator extends FilterIterator {
     public FeaturesFilterIterator(Iterator<Item> iter, Collection<String> f) {
 	super(iter);
-        features = f;
+        featureIds = FeatureRegistry.featureId(f);
     }
-    Collection<String> features;
+    private int[] featureIds;
 
     public boolean predicate(Item item) {
-	return item.hasFeatures(features);
+	return item.hasFeatures(featureIds);
     }
 }
