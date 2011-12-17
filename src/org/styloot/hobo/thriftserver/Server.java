@@ -63,7 +63,10 @@ public class Server {
         Vector<Item> result = new Vector<Item>();
         while ((line = reader.readLine()) != null) {
             String[] tokens = line.split(";");
-            String[] features = tokens[3].split(",");
+            String[] features = null;
+	    if (tokens.length == 4) {
+		features = tokens[3].split(",");
+	    }
             result.add(new Item(tokens[0], tokens[1], features, Integer.parseInt(tokens[2])));
         }
         return result;
