@@ -53,10 +53,10 @@ public class HoboIndex {
 
 	for (Iterator<Item> iter = items; iter.hasNext();) {
 	    Item item = iter.next();
-	    if (!result.containsKey(item.category)) {
-		result.put(item.category, new LinkedList<Item>());
+	    if (!result.containsKey(item.category.name)) {
+		result.put(item.category.name, new LinkedList<Item>());
 	    }
-	    result.get(item.category).add(item);
+	    result.get(item.category.name).add(item);
 	}
 	return result;
     }

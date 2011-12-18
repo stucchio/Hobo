@@ -9,13 +9,13 @@ import org.styloot.hobo.*;
 
 public class Item implements Comparable<Item>{
     public Item(String i, String c, Collection<String> f, int q) {
-	id = i; category = c; quality = q;
-	features = FeatureRegistry.featureId(f.toArray(new String[0]));
+	id = i; category = Category.getCategory(c); quality = q;
+	features = Feature.getFeatures(f);
     }
 
     public Item(String i, String c, String[] f, int q) {
-	id = i; category = c; quality = q;
-	features = FeatureRegistry.featureId(f);
+	id = i; category = Category.getCategory(c); quality = q;
+	features = Feature.getFeatures(f);
     }
 
     public boolean hasFeatures(Collection<String> feats) {
@@ -23,19 +23,19 @@ public class Item implements Comparable<Item>{
 	if (feats == null) {
 	    return true;
 	}
-	return hasFeatures(FeatureRegistry.featureId(feats));
+	return hasFeatures(Feature.getFeatures(feats));
     }
 
-    public boolean hasFeatures(int[] featIds) {
-	if (featIds == null) {
+    public boolean hasFeatures(Feature[] feats) {
+	if (feats == null) {
 	    return true;
 	}
-	if (features == null && featIds.length > 0) { //We definitely don't have the feature
+	if (features == null && feats.length > 0) { //We definitely don't have the feature
 	    return false;
 	}
-	for (int f : featIds) {
+	for (Feature f : feats) {
 	    boolean found = false;
-	    for (int f2 : features) {
+	    for (Feature f2 : features) {
 		if (f == f2) {
 		    found = true;
 		    break;
@@ -49,8 +49,8 @@ public class Item implements Comparable<Item>{
     }
 
     public final String id;
-    public final String category;
-    public final int[] features;
+    public final Category category;
+    public final Feature[] features;
     public final int quality;
 
     public int compareTo(Item o) {

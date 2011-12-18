@@ -46,9 +46,11 @@ public class Server {
 
     public static void main(String args[]) throws IOException {
 	log.info("Loading list of items from " + args[0]);
-	Collection<Item> items = itemsFromInputStream(new BufferedReader(new FileReader(args[0])));
+	FileReader infile = new FileReader(args[0]);
+	Collection<Item> items = itemsFromInputStream(new BufferedReader(infile));
+	infile.close();
 	log.info("Loaded " + items.size() + " items.");
-	log.info("Items are indexed with " + FeatureRegistry.size() + " features.");
+	log.info("Items are indexed with " + Feature.count() + " features.");
         HoboIndex index = new HoboIndex(items);
 	log.info("Build HoboIndex.");
 
