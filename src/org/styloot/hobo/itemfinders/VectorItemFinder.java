@@ -1,8 +1,9 @@
-package org.styloot.hobo;
+package org.styloot.hobo.itemfinders;
 
 import java.util.*;
 
 import org.styloot.hobo.*;
+import org.styloot.hobo.itemfinders.*;
 import org.styloot.hobo.iterators.FeaturesFilterIterator;
 
 public class VectorItemFinder implements ItemFinder {
@@ -13,6 +14,10 @@ public class VectorItemFinder implements ItemFinder {
     }
     private Vector<Item> items;
     private String category;
+
+    public int size() {
+	return items.size();
+    }
 
     public Iterator<Item> getItems() {
 	return items.iterator();

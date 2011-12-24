@@ -36,6 +36,10 @@ public class Feature implements Comparable<Feature> {
 	return name;
     }
 
+    public int hashCode() {
+	return name.hashCode();
+    }
+
     public int compareTo(Feature o) {
 	return name.compareTo(o.name);
     }

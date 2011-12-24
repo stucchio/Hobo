@@ -26,6 +26,19 @@ public class Item implements Comparable<Item>{
 	return hasFeatures(Feature.getFeatures(feats));
     }
 
+    public Feature[] getFeatures() {
+	return features;
+    }
+
+    public boolean hasFeature(Feature f) {
+	for (Feature f2 : features) {
+	    if (f == f2) {
+		return true;
+	    }
+	}
+	return false;
+    }
+
     public boolean hasFeatures(Feature[] feats) {
 	if (feats == null) {
 	    return true;
@@ -34,14 +47,7 @@ public class Item implements Comparable<Item>{
 	    return false;
 	}
 	for (Feature f : feats) {
-	    boolean found = false;
-	    for (Feature f2 : features) {
-		if (f == f2) {
-		    found = true;
-		    break;
-		}
-	    }
-	    if (!found) {
+	    if (!hasFeature(f)) {
 		return false;
 	    }
 	}
