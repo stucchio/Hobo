@@ -23,7 +23,7 @@ class HoboServerImpl implements Hobo.Iface {
 	    if (count >= page*pageSize) {
 		result.add(item.id);
 	    }
-	    if (count > (page+1)*pageSize) {
+	    if (count >= (page+1)*pageSize) {
 		break;
 	    }
 	    count += 1;
