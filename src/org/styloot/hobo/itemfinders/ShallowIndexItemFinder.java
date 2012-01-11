@@ -5,6 +5,7 @@ import java.util.*;
 import org.styloot.hobo.*;
 import org.styloot.hobo.itemfinders.*;
 import org.styloot.hobo.iterators.FeaturesFilterIterator;
+import org.styloot.hobo.iterators.ColorFilterIterator;
 
 public class ShallowIndexItemFinder implements ItemFinder {
     public ShallowIndexItemFinder(Collection<Item> myItems, String cat) {
@@ -72,6 +73,12 @@ public class ShallowIndexItemFinder implements ItemFinder {
 	return bestFinder.findItemsWithFeatures(features);
     };
 
+    public Iterator<Item> findItemsWithFeaturesAndColor(Collection<String> features, CIELabColor color, double distance) {
+	if (color == null) {
+	    return findItemsWithFeatures(features);
+	}
+	return new ColorFilterIterator(findItemsWithFeatures(features), color, distance);
+    }
 
     //Testing
     public static void main(String[] args) {
@@ -81,7 +88,7 @@ public class ShallowIndexItemFinder implements ItemFinder {
 	    f.add("foo");
 	    if (i % 2 == 0)
 		f.add("bar");
-	    items.add(new Item("id" + i, "/clothing",	f, i));
+	    items.add(new Item("id" + i, "/clothing",	f, i, null));
 	}
 
 	ItemFinder itemFinder = new ShallowIndexItemFinder(items, "clothing");

@@ -8,14 +8,16 @@ import java.util.*;
 import org.styloot.hobo.*;
 
 public class Item implements Comparable<Item>{
-    public Item(String i, String c, Collection<String> f, int q) {
+    public Item(String i, String c, Collection<String> f, int q, CIELabColor clr) {
 	id = i; category = Category.getCategory(c); quality = q;
 	features = Feature.getFeatures(f);
+	color = clr;
     }
 
-    public Item(String i, String c, String[] f, int q) {
+    public Item(String i, String c, String[] f, int q, CIELabColor clr) {
 	id = i; category = Category.getCategory(c); quality = q;
 	features = Feature.getFeatures(f);
+	color = clr;
     }
 
     public boolean hasFeatures(Collection<String> feats) {
@@ -58,6 +60,7 @@ public class Item implements Comparable<Item>{
     public final Category category;
     public final Feature[] features;
     public final int quality;
+    public final CIELabColor color;
 
     public int compareTo(Item o) {
 	if (quality != o.quality) {
@@ -72,7 +75,7 @@ public class Item implements Comparable<Item>{
 	Vector<String> f = new Vector<String>();
 	f.add("foo");
 	f.add("bar");
-	Item i = new Item("1", "/baz", f, 1);
+	Item i = new Item("1", "/baz", f, 1, null);
 	if (!i.hasFeatures(f)) {
 	    System.out.println("Has features failed");
 	}

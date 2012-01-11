@@ -29,6 +29,10 @@ public class HoboIndex {
     }
 
     public Iterator<Item> find(String cat, Collection<String> features) {
+	return findByColor(cat, features, (CIELabColor)null, 0.0);
+    }
+
+    public Iterator<Item> findByColor(String cat, Collection<String> features, CIELabColor color, double dist) {
 	Vector<Iterator<Item>> iters = new Vector<Iterator<Item>>();
 
 	Collection<ItemFinder> categories;
@@ -37,14 +41,8 @@ public class HoboIndex {
 	} else {
 	    categories = categoryMap.values(); //Small performance improvement in case of no category
 	}
-	if (features != null && features.size() > 0) {
-	    for (ItemFinder f : categories) {
-		iters.add(f.findItemsWithFeatures(features));
-	    }
-	} else {
-	    for (ItemFinder f : categories) {
-		iters.add(f.getItems());
-	    }
+	for (ItemFinder f : categories) {
+	    iters.add(f.findItemsWithFeaturesAndColor(features, color, dist));
 	}
 	return new CombinedIterator(iters);
     }
@@ -86,11 +84,11 @@ public class HoboIndex {
 	    if (i % 2 == 0)
 		f.add("bar");
 	    if (i % 3 == 0)
-		items.add(new Item("id" + i, "/dress", f, i));
+		items.add(new Item("id" + i, "/dress", f, i, null));
 	    if (i % 3 == 1)
-		items.add(new Item("id" + i, "/dress/short", f, i));
+		items.add(new Item("id" + i, "/dress/short", f, i, null));
 	    if (i % 3 == 2)
-		items.add(new Item("id" + i, "/skirt", f, i));
+		items.add(new Item("id" + i, "/skirt", f, i, null));
 	}
 
 	HoboIndex idx = new HoboIndex(items);

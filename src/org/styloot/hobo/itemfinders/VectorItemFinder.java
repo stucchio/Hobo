@@ -5,6 +5,7 @@ import java.util.*;
 import org.styloot.hobo.*;
 import org.styloot.hobo.itemfinders.*;
 import org.styloot.hobo.iterators.FeaturesFilterIterator;
+import org.styloot.hobo.iterators.ColorFilterIterator;
 
 public class VectorItemFinder implements ItemFinder {
     public VectorItemFinder(Collection<Item> myItems, String cat) {
@@ -29,6 +30,12 @@ public class VectorItemFinder implements ItemFinder {
 	return new FeaturesFilterIterator(items.iterator(), features);
     };
 
+    public Iterator<Item> findItemsWithFeaturesAndColor(Collection<String> features, CIELabColor color, double distance) {
+	if (color != null) {
+	    return new ColorFilterIterator(findItemsWithFeatures(features), color, distance);
+	}
+	return findItemsWithFeatures(features);
+    };
 
     //Testing
     public static void main(String[] args) {
@@ -39,7 +46,7 @@ public class VectorItemFinder implements ItemFinder {
 	    if (i % 2 == 0)
 		f.add("bar");
 
-	    items.add(new Item("id" + i, "baz",	f, i));
+	    items.add(new Item("id" + i, "baz",	f, i, null));
 	}
 
 	ItemFinder itemFinder = new VectorItemFinder(items, "");

@@ -44,7 +44,7 @@ public class Server {
         }
     }
 
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) throws Exception {
 	log.info("Loading list of items from " + args[0]);
 	FileReader infile = new FileReader(args[0]);
 	Collection<Item> items = itemsFromInputStream(new BufferedReader(infile));
@@ -61,16 +61,30 @@ public class Server {
         srv.start();
     }
 
-    private static Collection<Item> itemsFromInputStream(BufferedReader reader) throws IOException {
+    private static Collection<Item> itemsFromInputStream(BufferedReader reader) throws Exception {
         String line;
         Vector<Item> result = new Vector<Item>();
+	long lineCount = 0;
         while ((line = reader.readLine()) != null) {
-            String[] tokens = line.split(";");
-            String[] features = null;
-	    if (tokens.length == 4) {
-		features = tokens[3].split(",");
+	    try {
+
+		String[] tokens = line.split(";");
+		String[] features = null;
+		if (tokens.length == 5) {
+		    features = tokens[4].split(",");
+		}
+		CIELabColor color = null;
+		if (!tokens[3].equals("")) {
+		    String[] colorStrings = tokens[3].split(",");
+		    color = CIELabColor.CIELabFromRGB(Integer.parseInt(colorStrings[0]), Integer.parseInt(colorStrings[1]), Integer.parseInt(colorStrings[2]));
+		}
+		result.add(new Item(tokens[0], tokens[1], features, Integer.parseInt(tokens[2]), color));
+		lineCount += 1;
+
+	    } catch (Exception e) {
+		log.error("Error parsing line " + lineCount + ": " + line);
+		throw e;
 	    }
-            result.add(new Item(tokens[0], tokens[1], features, Integer.parseInt(tokens[2])));
         }
         return result;
     }
