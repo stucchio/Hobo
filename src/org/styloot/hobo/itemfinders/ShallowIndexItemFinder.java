@@ -88,7 +88,7 @@ public class ShallowIndexItemFinder implements ItemFinder {
 	    f.add("foo");
 	    if (i % 2 == 0)
 		f.add("bar");
-	    items.add(new Item("id" + i, "/clothing",	f, i, null));
+	    items.add(new Item("id" + i, "/clothing",	f, i, null, 0));
 	}
 
 	ItemFinder itemFinder = new ShallowIndexItemFinder(items, "clothing");

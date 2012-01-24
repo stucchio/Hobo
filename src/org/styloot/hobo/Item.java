@@ -8,20 +8,22 @@ import java.util.*;
 import org.styloot.hobo.*;
 
 public class Item implements Comparable<Item>{
-    public Item(String i, String c, Collection<String> f, int q, CIELabColor clr) {
+    public Item(String i, String c, Collection<String> f, int q, CIELabColor clr, int cst) {
 	id = i; category = Category.getCategory(c); quality = q;
 	features = Feature.getFeatures(f);
 	color = clr;
+	cost = cst;
     }
 
-    public Item(String i, String c, String[] f, int q, CIELabColor clr) {
+    public Item(String i, String c, String[] f, int q, CIELabColor clr, int cst) {
 	id = i; category = Category.getCategory(c); quality = q;
 	features = Feature.getFeatures(f);
 	color = clr;
+	cost = cst;
     }
 
     public boolean hasFeatures(Collection<String> feats) {
-	log.warn("Calling item.hasFeatures(Collection<String> features) - will be innefficient.");
+	log.warn("Calling item.hasFeatures(Collection<String> features) - will be inefficient.");
 	if (feats == null) {
 	    return true;
 	}
@@ -61,6 +63,7 @@ public class Item implements Comparable<Item>{
     public final Feature[] features;
     public final int quality;
     public final CIELabColor color;
+    public final int cost;
 
     public int compareTo(Item o) {
 	if (quality != o.quality) {
@@ -75,7 +78,7 @@ public class Item implements Comparable<Item>{
 	Vector<String> f = new Vector<String>();
 	f.add("foo");
 	f.add("bar");
-	Item i = new Item("1", "/baz", f, 1, null);
+	Item i = new Item("1", "/baz", f, 1, null, 5);
 	if (!i.hasFeatures(f)) {
 	    System.out.println("Has features failed");
 	}

@@ -84,11 +84,11 @@ public class HoboIndex {
 	    if (i % 2 == 0)
 		f.add("bar");
 	    if (i % 3 == 0)
-		items.add(new Item("id" + i, "/dress", f, i, null));
+		items.add(new Item("id" + i, "/dress", f, i, null,0 ));
 	    if (i % 3 == 1)
-		items.add(new Item("id" + i, "/dress/short", f, i, null));
+		items.add(new Item("id" + i, "/dress/short", f, i, null, 0));
 	    if (i % 3 == 2)
-		items.add(new Item("id" + i, "/skirt", f, i, null));
+		items.add(new Item("id" + i, "/skirt", f, i, null, 0));
 	}
 
 	HoboIndex idx = new HoboIndex(items);

@@ -59,7 +59,7 @@ public class CombinedIterator implements Iterator<Item> {
 	    items.add(new Vector<Item>());
 	}
 	for (int i=0;i<30;i++) {
-	    items.get(i % 3).add(new Item("id" + i, "baz", new Vector<String>(), i + (i % 5), null));
+	    items.get(i % 3).add(new Item("id" + i, "baz", new Vector<String>(), i + (i % 5), null, 0));
 	}
 	Vector<Iterator<Item>> iterators = new Vector<Iterator<Item>>();
 	for (int i=0;i<3;i++) {

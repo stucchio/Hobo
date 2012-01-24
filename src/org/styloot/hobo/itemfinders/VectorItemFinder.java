@@ -46,7 +46,7 @@ public class VectorItemFinder implements ItemFinder {
 	    if (i % 2 == 0)
 		f.add("bar");
 
-	    items.add(new Item("id" + i, "baz",	f, i, null));
+	    items.add(new Item("id" + i, "baz",	f, i, null, 0));
 	}
 
 	ItemFinder itemFinder = new VectorItemFinder(items, "");
