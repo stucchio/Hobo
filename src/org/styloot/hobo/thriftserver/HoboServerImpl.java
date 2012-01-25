@@ -14,27 +14,15 @@ class HoboServerImpl implements Hobo.Iface {
     HoboIndex index;
     int pageSize;
 
-    public List<String> find(String category_name, List<String> features, int page) throws TException {
+    public List<String> find(String category_name, List<String> features, byte red, byte green, byte blue, double colorDist, int cost_min, int cost_max, int page) throws TException {
 	Vector<String> result = new Vector<String>(pageSize);
 	int count = 0;
-	Iterator<Item> iter = index.find(category_name, features);
-	while (iter.hasNext()) {
-	    Item item = iter.next();
-	    if (count >= page*pageSize) {
-		result.add(item.id);
-	    }
-	    if (count >= (page+1)*pageSize) {
-		break;
-	    }
-	    count += 1;
+	Iterator<Item> iter;
+	if (colorDist >= 0) {
+	    iter = index.findByColor(category_name, features, CIELabColor.CIELabFromRGB(red, green, blue), colorDist, cost_min, cost_max);
+	} else {
+	    iter = index.find(category_name, features, cost_min, cost_max);
 	}
-	return result;
-    }
-
-    public List<String> findByColor(String category_name, List<String> features, byte red, byte green, byte blue, double colorDist, int page) throws TException {
-	Vector<String> result = new Vector<String>(pageSize);
-	int count = 0;
-	Iterator<Item> iter = index.findByColor(category_name, features, CIELabColor.CIELabFromRGB(red, green, blue), colorDist);
 	while (iter.hasNext()) {
 	    Item item = iter.next();
 	    if (count >= page*pageSize) {

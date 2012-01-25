@@ -70,7 +70,7 @@ public class Server {
 
 		String[] tokens = line.split(";");
 		String[] features = null;
-		if (tokens.length == 5) {
+		if (tokens.length >= 5) {
 		    features = tokens[4].split(",");
 		}
 		CIELabColor color = null;
@@ -78,7 +78,7 @@ public class Server {
 		    String[] colorStrings = tokens[3].split(",");
 		    color = CIELabColor.CIELabFromRGB(Integer.parseInt(colorStrings[0]), Integer.parseInt(colorStrings[1]), Integer.parseInt(colorStrings[2]));
 		}
-		result.add(new Item(tokens[0], tokens[1], features, Integer.parseInt(tokens[2]), color));
+		result.add(new Item(tokens[0], tokens[1], features, Integer.parseInt(tokens[2]), color, Integer.parseInt(tokens[5])));
 		lineCount += 1;
 
 	    } catch (Exception e) {

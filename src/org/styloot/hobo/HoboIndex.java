@@ -28,11 +28,11 @@ public class HoboIndex {
 	log.info("ItemFinders built.");
     }
 
-    public Iterator<Item> find(String cat, Collection<String> features) {
-	return findByColor(cat, features, (CIELabColor)null, 0.0);
+    public Iterator<Item> find(String cat, Collection<String> features, int minPrice, int maxPrice) {
+	return findByColor(cat, features, (CIELabColor)null, 0.0, minPrice, maxPrice);
     }
 
-    public Iterator<Item> findByColor(String cat, Collection<String> features, CIELabColor color, double dist) {
+    public Iterator<Item> findByColor(String cat, Collection<String> features, CIELabColor color, double dist, int minPrice, int maxPrice) {
 	Vector<Iterator<Item>> iters = new Vector<Iterator<Item>>();
 
 	Collection<ItemFinder> categories;
@@ -42,7 +42,7 @@ public class HoboIndex {
 	    categories = categoryMap.values(); //Small performance improvement in case of no category
 	}
 	for (ItemFinder f : categories) {
-	    iters.add(f.findItemsWithFeaturesAndColor(features, color, dist));
+	    iters.add(f.findItemsWithFeaturesAndColor(features, color, dist, minPrice, maxPrice));
 	}
 	return new CombinedIterator(iters);
     }
@@ -96,7 +96,7 @@ public class HoboIndex {
 	Vector<String> f = new Vector<String>();
 	f.add("foo");
 	f.add("bar");
-	for (Iterator<Item> i = idx.find("/dress", f); i.hasNext(); ) {
+	for (Iterator<Item> i = idx.find("/dress", f, 0, Integer.MAX_VALUE); i.hasNext(); ) {
 	    Item item = (Item)i.next();
 	    System.out.println(item.id + " -> " + item.category + " , " + item.quality);
 	}

@@ -2,21 +2,27 @@ package org.styloot.hobo.itemfinders;
 
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.styloot.hobo.*;
 import org.styloot.hobo.itemfinders.*;
 import org.styloot.hobo.iterators.FeaturesFilterIterator;
 import org.styloot.hobo.iterators.ColorFilterIterator;
 
 public class ShallowIndexItemFinder implements ItemFinder {
+    private static final Logger log = LoggerFactory.getLogger(ShallowIndexItemFinder.class);
+
     public ShallowIndexItemFinder(Collection<Item> myItems, String cat) {
 	items = new Vector<Item>(myItems);
 	Collections.sort(items);
 	category = cat;
-
 	Set<Feature> features = new HashSet<Feature>();
 	for (Item item : items) {
-	    for (Feature feature : item.getFeatures()) {
-		features.add(feature);
+	    if (item.getFeatures() != null) {
+		for (Feature feature : item.getFeatures()) {
+		    features.add(feature);
+		}
 	    }
 	}
 	featureIndex = new HashMap<Feature,ItemFinder>();
@@ -46,7 +52,7 @@ public class ShallowIndexItemFinder implements ItemFinder {
 	return items.iterator();
     }
 
-    public Iterator<Item> findItemsWithFeatures(Collection<String> features) {
+    public Iterator<Item> findItemsWithFeatures(Collection<String> features, int minPrice, int maxPrice) {
 	if (features == null || features.size() == 0)
 	    return items.iterator();
 
@@ -70,14 +76,14 @@ public class ShallowIndexItemFinder implements ItemFinder {
 	}
 
 	features.remove(bestFeature);
-	return bestFinder.findItemsWithFeatures(features);
+	return bestFinder.findItemsWithFeatures(features, minPrice, maxPrice);
     };
 
-    public Iterator<Item> findItemsWithFeaturesAndColor(Collection<String> features, CIELabColor color, double distance) {
+    public Iterator<Item> findItemsWithFeaturesAndColor(Collection<String> features, CIELabColor color, double distance, int minPrice, int maxPrice) {
 	if (color == null) {
-	    return findItemsWithFeatures(features);
+	    return findItemsWithFeatures(features, minPrice, maxPrice);
 	}
-	return new ColorFilterIterator(findItemsWithFeatures(features), color, distance);
+	return new ColorFilterIterator(findItemsWithFeatures(features, minPrice, maxPrice), color, distance);
     }
 
     //Testing
@@ -95,7 +101,7 @@ public class ShallowIndexItemFinder implements ItemFinder {
 	Vector<String> f = new Vector<String>();
 	f.add("bar");
 	int id=8;
-	for (Iterator<Item> iterator = itemFinder.findItemsWithFeatures(f); iterator.hasNext(); ) {
+	for (Iterator<Item> iterator = itemFinder.findItemsWithFeatures(f, 0, Integer.MAX_VALUE); iterator.hasNext(); ) {
 	    Item item = (Item)iterator.next();
 	    if (!item.id.equals("id"+id)) {
 		System.out.println("Error - should be id" + id + ", was " + item.id);

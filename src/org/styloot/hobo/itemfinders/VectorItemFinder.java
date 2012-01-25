@@ -4,8 +4,7 @@ import java.util.*;
 
 import org.styloot.hobo.*;
 import org.styloot.hobo.itemfinders.*;
-import org.styloot.hobo.iterators.FeaturesFilterIterator;
-import org.styloot.hobo.iterators.ColorFilterIterator;
+import org.styloot.hobo.iterators.*;
 
 public class VectorItemFinder implements ItemFinder {
     public VectorItemFinder(Collection<Item> myItems, String cat) {
@@ -24,17 +23,21 @@ public class VectorItemFinder implements ItemFinder {
 	return items.iterator();
     }
 
-    public Iterator<Item> findItemsWithFeatures(Collection<String> features) {
+    public Iterator<Item> findItemsWithFeatures(Collection<String> features, int minPrice, int maxPrice) {
 	if (features == null || features.size() == 0)
 	    return items.iterator();
-	return new FeaturesFilterIterator(items.iterator(), features);
+	Iterator<Item> iterator = items.iterator();
+	if (minPrice > 0 && maxPrice < Integer.MAX_VALUE) {
+	    iterator = new CostFilterIterator(iterator, minPrice, maxPrice);
+	}
+	return new FeaturesFilterIterator(iterator, features);
     };
 
-    public Iterator<Item> findItemsWithFeaturesAndColor(Collection<String> features, CIELabColor color, double distance) {
+    public Iterator<Item> findItemsWithFeaturesAndColor(Collection<String> features, CIELabColor color, double distance, int minPrice, int maxPrice) {
 	if (color != null) {
-	    return new ColorFilterIterator(findItemsWithFeatures(features), color, distance);
+	    return new ColorFilterIterator(findItemsWithFeatures(features, minPrice, maxPrice), color, distance);
 	}
-	return findItemsWithFeatures(features);
+	return findItemsWithFeatures(features, minPrice, maxPrice);
     };
 
     //Testing
@@ -52,7 +55,7 @@ public class VectorItemFinder implements ItemFinder {
 	ItemFinder itemFinder = new VectorItemFinder(items, "");
 	Vector<String> f = new Vector<String>();
 	f.add("bar");
-	for (Iterator<Item> i = itemFinder.findItemsWithFeatures(f); i.hasNext(); ) {
+	for (Iterator<Item> i = itemFinder.findItemsWithFeatures(f, 0, Integer.MAX_VALUE); i.hasNext(); ) {
 	    Item item = (Item)i.next();
 	}
 
