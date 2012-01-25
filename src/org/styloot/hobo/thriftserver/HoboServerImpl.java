@@ -23,10 +23,11 @@ class HoboServerImpl implements Hobo.Iface {
 	Vector<String> result = new Vector<String>(pageSize);
 	int count = 0;
 	Iterator<Item> iter;
+	log.info("Running query with cost: " + cost_min + ", " + cost_max);
 	if (colorDist > 0) {
-	    iter = index.findByColor(category_name, features, CIELabColor.CIELabFromRGB(red, green, blue), colorDist, cost_min, cost_max);
+	    iter = index.find(category_name, features, CIELabColor.CIELabFromRGB(red, green, blue), colorDist, cost_min, cost_max);
 	} else {
-	    iter = index.find(category_name, features, cost_min, cost_max);
+	    iter = index.find(category_name, features, null, 0, cost_min, cost_max);
 	}
 	while (iter.hasNext()) {
 	    Item item = iter.next();

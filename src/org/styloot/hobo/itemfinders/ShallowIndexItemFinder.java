@@ -52,8 +52,9 @@ public class ShallowIndexItemFinder implements ItemFinder {
     }
 
     public Iterator<Item> findItemsWithFeatures(Collection<String> features, int minPrice, int maxPrice) {
-	if (features == null || features.size() == 0)
-	    return items.iterator();
+	if (features == null || features.size() == 0) {
+	    return CostFilterIterator.wrap(items.iterator(), minPrice, maxPrice);
+	}
 
 	features = new Vector<String>(features); //Clone this, because we will mutate it later
 
@@ -71,10 +72,7 @@ public class ShallowIndexItemFinder implements ItemFinder {
 	    }
 	}
 	if (bestFinder == this) {
-	    Iterator<Item> iterator = items.iterator();
-	    if (minPrice > 0 || maxPrice < Integer.MAX_VALUE) {
-		iterator = new CostFilterIterator(iterator, minPrice, maxPrice);
-	    }
+	    Iterator<Item> iterator = CostFilterIterator.wrap(items.iterator(), minPrice, maxPrice);
 	    return new FeaturesFilterIterator(iterator, features);
 	}
 
@@ -83,7 +81,7 @@ public class ShallowIndexItemFinder implements ItemFinder {
     };
 
     public Iterator<Item> findItemsWithFeaturesAndColor(Collection<String> features, CIELabColor color, double distance, int minPrice, int maxPrice) {
-	if (color == null) {
+	if (color == null || distance < 0) {
 	    return findItemsWithFeatures(features, minPrice, maxPrice);
 	}
 	return new ColorFilterIterator(findItemsWithFeatures(features, minPrice, maxPrice), color, distance);

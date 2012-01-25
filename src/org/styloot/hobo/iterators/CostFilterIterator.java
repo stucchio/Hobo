@@ -21,6 +21,13 @@ public class CostFilterIterator extends FilterIterator {
     private final int max;
 
     public boolean predicate(Item item) {
-	return item.cost >= min && item.cost <= max;
+	return (item.cost >= min) && (item.cost <= max);
+    }
+
+    public static Iterator<Item> wrap(Iterator<Item> iterator, int minCost, int maxCost) {
+	if (minCost > 0 || maxCost < Integer.MAX_VALUE) {
+	    iterator = new CostFilterIterator(iterator, minCost, maxCost);
+	}
+	return iterator;
     }
 }

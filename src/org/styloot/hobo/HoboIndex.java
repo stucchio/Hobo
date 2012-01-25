@@ -28,11 +28,7 @@ public class HoboIndex {
 	log.info("ItemFinders built.");
     }
 
-    public Iterator<Item> find(String cat, Collection<String> features, int minPrice, int maxPrice) {
-	return findByColor(cat, features, (CIELabColor)null, 0.0, minPrice, maxPrice);
-    }
-
-    public Iterator<Item> findByColor(String cat, Collection<String> features, CIELabColor color, double dist, int minPrice, int maxPrice) {
+    public Iterator<Item> find(String cat, Collection<String> features, CIELabColor color, double dist, int minPrice, int maxPrice) {
 	if (dist < 0) { //Negative color distance implies no color query
 	    color = null;
 	}
@@ -100,7 +96,7 @@ public class HoboIndex {
 	Vector<String> f = new Vector<String>();
 	f.add("foo");
 	f.add("bar");
-	for (Iterator<Item> i = idx.find("/dress", f, 0, Integer.MAX_VALUE); i.hasNext(); ) {
+	for (Iterator<Item> i = idx.find("/dress", f, null, 0, 2, Integer.MAX_VALUE); i.hasNext(); ) {
 	    Item item = (Item)i.next();
 	    System.out.println(item.id + " -> " + item.category + " , " + item.quality + " , " + item.cost);
 	}

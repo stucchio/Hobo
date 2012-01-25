@@ -25,11 +25,8 @@ public class VectorItemFinder implements ItemFinder {
 
     public Iterator<Item> findItemsWithFeatures(Collection<String> features, int minPrice, int maxPrice) {
 	if (features == null || features.size() == 0)
-	    return items.iterator();
-	Iterator<Item> iterator = items.iterator();
-	if (minPrice > 0 || maxPrice < Integer.MAX_VALUE) {
-	    iterator = new CostFilterIterator(iterator, minPrice, maxPrice);
-	}
+	    return CostFilterIterator.wrap(items.iterator(), minPrice, maxPrice);
+	Iterator<Item> iterator = CostFilterIterator.wrap(items.iterator(), minPrice, maxPrice);
 	return new FeaturesFilterIterator(iterator, features);
     };
 
