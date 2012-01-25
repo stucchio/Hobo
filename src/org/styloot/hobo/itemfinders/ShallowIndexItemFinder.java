@@ -7,8 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import org.styloot.hobo.*;
 import org.styloot.hobo.itemfinders.*;
-import org.styloot.hobo.iterators.FeaturesFilterIterator;
-import org.styloot.hobo.iterators.ColorFilterIterator;
+import org.styloot.hobo.iterators.*;
 
 public class ShallowIndexItemFinder implements ItemFinder {
     private static final Logger log = LoggerFactory.getLogger(ShallowIndexItemFinder.class);
@@ -72,7 +71,11 @@ public class ShallowIndexItemFinder implements ItemFinder {
 	    }
 	}
 	if (bestFinder == this) {
-	    return new FeaturesFilterIterator(items.iterator(), features);
+	    Iterator<Item> iterator = items.iterator();
+	    if (minPrice > 0 || maxPrice < Integer.MAX_VALUE) {
+		iterator = new CostFilterIterator(iterator, minPrice, maxPrice);
+	    }
+	    return new FeaturesFilterIterator(iterator, features);
 	}
 
 	features.remove(bestFeature);

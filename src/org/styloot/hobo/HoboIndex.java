@@ -33,6 +33,10 @@ public class HoboIndex {
     }
 
     public Iterator<Item> findByColor(String cat, Collection<String> features, CIELabColor color, double dist, int minPrice, int maxPrice) {
+	if (dist < 0) { //Negative color distance implies no color query
+	    color = null;
+	}
+
 	Vector<Iterator<Item>> iters = new Vector<Iterator<Item>>();
 
 	Collection<ItemFinder> categories;
