@@ -84,11 +84,11 @@ public class HoboIndex {
 	    if (i % 2 == 0)
 		f.add("bar");
 	    if (i % 3 == 0)
-		items.add(new Item("id" + i, "/dress", f, i, null,0 ));
+		items.add(new Item("id" + i, "/dress", f, i, null, i));
 	    if (i % 3 == 1)
-		items.add(new Item("id" + i, "/dress/short", f, i, null, 0));
+		items.add(new Item("id" + i, "/dress/short", f, i, null, i));
 	    if (i % 3 == 2)
-		items.add(new Item("id" + i, "/skirt", f, i, null, 0));
+		items.add(new Item("id" + i, "/skirt", f, i, null, i));
 	}
 
 	HoboIndex idx = new HoboIndex(items);
@@ -98,7 +98,7 @@ public class HoboIndex {
 	f.add("bar");
 	for (Iterator<Item> i = idx.find("/dress", f, 0, Integer.MAX_VALUE); i.hasNext(); ) {
 	    Item item = (Item)i.next();
-	    System.out.println(item.id + " -> " + item.category + " , " + item.quality);
+	    System.out.println(item.id + " -> " + item.category + " , " + item.quality + " , " + item.cost);
 	}
 
     }

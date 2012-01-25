@@ -21,6 +21,6 @@ public class CostFilterIterator extends FilterIterator {
     private final int max;
 
     public boolean predicate(Item item) {
-	return item.cost > min && item.cost <= max;
+	return item.cost >= min && item.cost <= max;
     }
 }
