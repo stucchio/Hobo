@@ -36,8 +36,7 @@ public class Server {
         try {
             TServerSocket serverTransport = new TServerSocket(port);
             Hobo.Processor processor = new Hobo.Processor(new HoboServerImpl(index, pageSize));
-            Factory protFactory = new TBinaryProtocol.Factory(true, true);
-            TServer server = new TThreadPoolServer(processor, serverTransport, protFactory);
+	    TServer server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTransport).processor(processor));
             server.serve();
         } catch (TTransportException e) {
             e.printStackTrace();
