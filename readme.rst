@@ -4,6 +4,10 @@ Hobo
 
 Hobo serves a simple purpose - it is an in-memory index of a set of documents.
 
+The main use case is as follows - you have a collection of documents which are tagged with some feature set.
+Hobo allows you to rapidly find the document ID's which contain the tagged features. It also allows search based
+on color, and based on an arbitrary cost function.
+
 
 Dependencies
 ============
@@ -32,6 +36,7 @@ The python client installation is similarly easy::
     $ tar -xvzf python-hobo.tgz
     $ mv hobo SOMEPLACE_IN_PYTHONPATH
 
+Building thrift clients for other languages should be very simple as well.
 
 Usage
 =====
@@ -62,11 +67,15 @@ Client
 
 HoboIndex supports one method: find(1:string category_name, 2:list<string> features, 3:byte red, 4:byte green, 5:byte blue, 6:double colorDist, 7:i32 cost_min, 8:i32 cost_max, 9:i32 page)::
 
-    find("/products/bags/hobo", ["brass buckle", "leather"], 127, -128, -128, 10, 0, 25, 0) will return a list of id's for items in /products/bags/hobo (or some subcategory), which also contain the features "brass buckle" and "leather", the color will have a CIE_LAB distance of 10 to rgb(255,0,0), and the cost will be between 0 and 25.
+    find("/products/bags/hobo", ["brass buckle", "leather"], 127, -128, -128, 10, 0, 25, 0)
 
-If no color filter is required, the color distance should be set to a negative value::
+will return a list of id's for items in /products/bags/hobo (or some subcategory), which also contain the features "brass buckle" and "leather", the color will have a CIE_LAB distance of 10 to rgb(255,0,0), and the cost will be between 0 and 25. If you are unfamiliar with color distance, check out the [wikipedia article](http://en.wikipedia.org/wiki/Color_difference) on the topic.
 
-    find("/products/bags/hobo", ["brass buckle", "leather"], 0, 0, 0, -1, 0, MAX_INT, 0) will return a list of id's for items in /products/bags/hobo (or some subcategory), which also contain the features "brass buckle" and "leather".
+If no color filter is required, the color distance should be set to a negative value. If no cost filter is required, then cost_min should be zero and cost_max should be set to MAX_INT=pow(2,31)-1 (the maximum possible value). For example, the call::
+
+    find("/products/bags/hobo", ["brass buckle", "leather"], 0, 0, 0, -1, 0, MAX_INT, 0)
+
+will return a list of id's for items in /products/bags/hobo (or some subcategory), which also contain the features "brass buckle" and "leather".
 
 The results are paginated - the call find(..., 0) above will return the first $PAGESIZE items, find(..., 1) will return the items from PAGESIZE to 2 x PAGESIZE, etc.
 
