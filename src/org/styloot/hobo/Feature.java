@@ -23,6 +23,7 @@ public class Feature implements Comparable<Feature> {
 	for (int i=0;i<features.length;i++) {
 	    result[i] = getFeature(features[i]);
 	}
+	Arrays.sort(result);
 	return result;
     }
 

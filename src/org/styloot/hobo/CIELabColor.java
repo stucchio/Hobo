@@ -36,6 +36,7 @@ public class CIELabColor {
 	var_R *= 100;
 	var_G *= 100;
 	var_B *= 100;
+
 	double X = var_R * 0.4124 + var_G * 0.3576 + var_B * 0.1805;
 	double Y = var_R * 0.2126 + var_G * 0.7152 + var_B * 0.0722;
 	double Z = var_R * 0.0193 + var_G * 0.1192 + var_B * 0.9505;
@@ -74,24 +75,29 @@ public class CIELabColor {
 	return Math.sqrt(distance2To(other));
     }
 
-    public double distance2To(CIELabColor other) {
-	//Color distance squared
-	double dL = L - other.L;
-	double da = a - other.a;
-	double db = b - other.b;
-	double Cx = Math.sqrt(a*a+b*b + 0.00001);
-	double Cy = Math.sqrt(other.a*other.a+other.b*other.b + 0.00001);
+    public static double distance2(double xL, double xa, double xb, double yL, double ya, double yb) {
+	/* This version does the math without boxing/unboxing overhead.
+	 */
+	double dL = xL - yL;
+	double da = xa - ya;
+	double db = xb - yb;
+	double Cx = Math.sqrt(xa*xa+xb*xb + SQRT_REGULARIZATION);
+	double Cy = Math.sqrt(ya*ya+yb*yb + SQRT_REGULARIZATION);
 	double dC = Cx - Cy;
 	double dH = Math.sqrt(da*da+db*db-dC*dC);
 	return (Math.pow(dL/KL,2) + Math.pow(dC/(1+K1*Cy), 2) + Math.pow(dH/(1+K2*Cy), 2));
     }
 
-    public String toString() {
-	return "CIELab(" + L + ", " + a + ", " + b + ")";
+    public static double distance2(CIELabColor base, double yL, double ya, double yb) {
+	return distance2(base.L, base.a, base.b, yL, ya, yb);
     }
 
-    public static void main(String[] args) {
-	System.out.println(CIELabFromRGB(255,16,0)); //CIELab(53.63283192339698, 78.95144586146552, 67.359200613973)
-	System.out.println(CIELabFromRGB(25,16,125)); //CIELab(15.788332034963975, 40.974868070447116, -58.06751132781398)
+    public double distance2To(CIELabColor other) {
+	//Color distance squared
+	return distance2(L, a, b, other.L, other.a, other.b);
+    }
+
+    public String toString() {
+	return "CIELab(" + L + ", " + a + ", " + b + ")";
     }
 }
