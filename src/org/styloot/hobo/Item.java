@@ -73,22 +73,4 @@ public class Item implements Comparable<Item>{
     }
 
     private static final Logger log = LoggerFactory.getLogger(Item.class);
-
-    public static void main(String[] args) {
-	Vector<String> f = new Vector<String>();
-	f.add("foo");
-	f.add("bar");
-	Item i = new Item("1", "/baz", f, 1, null, 5);
-	if (!i.hasFeatures(f)) {
-	    System.out.println("Has features failed");
-	}
-	f.remove(0);
-	if (!i.hasFeatures(f)) {
-	    System.out.println("Has features failed");
-	}
-	f.add("baz");
-	if (i.hasFeatures(f)) {
-	    System.out.println("Has features failed");
-	}
-    }
 }

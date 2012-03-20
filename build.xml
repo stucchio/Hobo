@@ -4,21 +4,34 @@
   <property name="src" location="src" />
   <property name="gen" location="gen-java" />
   <property name="build" location="build/classes" />
+  <property name="junit" location="build/classes" />
   <property name="testdir" location="test" />
 
   <path id="classpath">
-        <fileset dir="/usr/lib/jvm/java-6-sun/lib/" includes="**/*.jar"/>
-        <fileset dir="/usr/local/lib/" includes="**/*.jar"/>
-        <fileset dir="/usr/share/java/" includes="slf4j-api.jar"/>
-        <fileset dir="/usr/share/java/" includes="slf4j-simple-1.5.11.jar"/>
-    </path>
+    <fileset dir="/usr/local/lib/" includes="libthrift-0.8.0.jar" />
+    <fileset dir="/usr/local/lib/" includes="slf4j-api-1.5.8.jar"/>
+    <fileset dir="/usr/local/lib/" includes="slf4j-log4j12-1.5.8.jar"/>
+    <fileset dir="/usr/local/lib/" includes="log4j-1.2.14.jar"/>
+    <fileset dir="/usr/local/lib/" includes="junit-4.4.jar"/>
+  </path>
 
+  <path id="test.classpath">
+    <path refid="classpath" />
+    <fileset dir="/usr/local/lib/" includes="junit-4.4.jar"/>
+  </path>
+
+  <path id="junit.classpath">
+    <path refid="test.classpath" />
+    <fileset dir="build" includes="hobo.jar"/>
+    <pathelement path="build/classes" />
+  </path>
 
   <target name="init">
     <tstamp />
     <mkdir dir="${build}"/>
   </target>
 
+  <!-- Python Code -->
   <target name="python" depends="init">
     <exec executable="thrift"> <arg value="--gen"/> <arg value="py"/> <arg value="hobo.thrift"/> </exec>
     <exec executable="tar"> <arg value="czf"/> <arg value="build/python-hobo.tgz"/> <arg value="-c"/> <arg value="gen-py"/> </exec>
@@ -39,10 +52,32 @@
     <delete dir="gen-java"/>
   </target>
 
+  <!-- JAR -->
   <target name="jar" depends="compile">
     <jar jarfile="build/hobo.jar" basedir="${build}"/>
   </target>
 
+  <!-- Unit Tests -->
+  <target name="compile-test" depends="init,thriftcode">
+    <javac srcdir="${testdir}" destdir="${build}" classpathref="test.classpath" debug="on">
+      <compilerarg value="-Xlint:deprecation"/>
+    </javac>
+  </target>
+
+  <target name="test" depends="jar,compile-test">
+    <junit printsummary="yes" haltonfailure="yes" >
+      <classpath refid="junit.classpath"/>
+      <formatter type="plain" usefile="false" />
+      <batchtest fork="yes" >
+	<fileset dir="${testdir}">
+	  <include name="**/*Test*.java"/>
+	</fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+
+  <!-- Clean -->
   <target name="clean">
     <delete dir="${build}" />
     <delete file="tserver.jar" />
