@@ -4,6 +4,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 import org.styloot.hobo.Item;
+import org.styloot.hobo.CIELabColor;
 import org.styloot.hobo.Feature;
 
 import java.util.*;
@@ -12,13 +13,14 @@ public class TestItem {
     Item item1;
     Item item2;
     Vector<String> features;
+    private static double TOLERANCE = 1e-12;
 
     @Before public void setUp() {
 	features = new Vector<String>();
 	for (int i=0;i<10;i++) {
 	    features.add("feature-" + i);
 	}
-	item1 = new Item("1", "/baz", features, 3, null, 5);
+	item1 = new Item("1", "/baz", features, 3, CIELabColor.CIELabFromRGB(255,16,0), 5);
 	item2 = new Item("1", "/baz", (String[])null, 1, null, 5);
     }
 
@@ -82,6 +84,11 @@ public class TestItem {
 	}
 	f.add("buz");
 	assertTrue(!item1.hasFeaturesSorted(Feature.getFeatures(f))); //Does not contain a subset of features
+    }
+
+    @Test public void testColorDistFrom() {
+	CIELabColor color = CIELabColor.CIELabFromRGB(25,16,125);
+	assertEquals(item1.colorDist2From(color), color.distance2To(item1.getColor()), TOLERANCE); //Does not contain a subset of features
     }
 
 

@@ -91,6 +91,14 @@ public class Item implements Comparable<Item>{
 	return true;
     }
 
+    public double colorDist2From(CIELabColor other) {
+	return other.distance2To(color);
+    }
+
+    public CIELabColor getColor() {
+	return color;
+    }
+
     public final String id;
     public final Category category;
     public final Feature[] features;

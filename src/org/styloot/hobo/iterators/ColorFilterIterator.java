@@ -26,6 +26,6 @@ public class ColorFilterIterator extends FilterIterator {
 	if (item.color == null) {
 	    return false;
 	}
-	return color.distance2To(item.color) <= distanceSquared;
+	return (item.colorDist2From(color) <= distanceSquared);
     }
 }
