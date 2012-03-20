@@ -43,6 +43,39 @@ public class Item implements Comparable<Item>{
 	return false;
     }
 
+    public boolean hasFeaturesSorted(Feature[] feats) {
+	if (feats == null) {
+	    return true;
+	}
+	if (features == null && feats.length > 0) { //We definitely don't have the feature
+	    return false;
+	}
+	int i=0;
+	int j=0;
+	int matches = 0;
+	while ((i < features.length) && (j < feats.length)) {
+	    if (feats[j].compareTo(features[i]) < 0) {
+		j++;
+		continue;
+	    }
+	    if (feats[j].compareTo(features[i]) > 0) {
+		i++;
+		continue;
+	    }
+	    if (feats[j] == features[i]) {
+		j++;
+		i++;
+		matches++;
+		continue;
+	    }
+	}
+	if (matches == feats.length) {
+	    return true;
+	} else {
+	    return false;
+	}
+    }
+
     public boolean hasFeatures(Feature[] feats) {
 	if (feats == null) {
 	    return true;

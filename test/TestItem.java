@@ -4,6 +4,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 import org.styloot.hobo.Item;
+import org.styloot.hobo.Feature;
 
 import java.util.*;
 
@@ -14,8 +15,9 @@ public class TestItem {
 
     @Before public void setUp() {
 	features = new Vector<String>();
-	features.add("foo");
-	features.add("bar");
+	for (int i=0;i<10;i++) {
+	    features.add("feature-" + i);
+	}
 	item1 = new Item("1", "/baz", features, 3, null, 5);
 	item2 = new Item("1", "/baz", (String[])null, 1, null, 5);
     }
@@ -31,8 +33,12 @@ public class TestItem {
 
     @Test public void testHasFeatures2(){
 	Vector<String> f = new Vector<String>();
-	f.add("foo");
-	assertTrue( item1.hasFeatures(f) ); //Contains a subset of "foo", "bar"
+	for (int j=0;j<10;j++) {
+	    if (Math.random() > 0.5) {
+		f.add("feature-" + j);
+	    }
+	}
+	assertTrue( item1.hasFeatures(f) ); //Contains a subset of features
     }
 
     @Test public void testHasFeatures3(){
@@ -56,4 +62,27 @@ public class TestItem {
 	Vector<String> f = new Vector<String>();
 	assertTrue(item2.hasFeatures(f)); //Does contain nothing
     }
+
+    @Test public void testHasFeaturesSorted() {
+	Vector<String> f = new Vector<String>();
+	for (int j=0;j<10;j++) {
+	    if (Math.random() > 0.5) {
+		f.add("feature-" + j);
+	    }
+	}
+	assertTrue(item1.hasFeaturesSorted(Feature.getFeatures(f))); //Contains a subset of features
+    }
+
+    @Test public void testHasFeaturesSorted2() {
+	Vector<String> f = new Vector<String>();
+	for (int j=0;j<10;j++) {
+	    if (Math.random() > 0.5) {
+		f.add("feature-" + j);
+	    }
+	}
+	f.add("buz");
+	assertTrue(!item1.hasFeaturesSorted(Feature.getFeatures(f))); //Does not contain a subset of features
+    }
+
+
 }
