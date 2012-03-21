@@ -63,17 +63,16 @@ public class Item implements Comparable<Item>{
 		continue;
 	    }
 	    if (feats[j] == features[i]) {
+		matches++;
+		if (matches == feats.length) {
+		    return true;
+		}
 		j++;
 		i++;
-		matches++;
 		continue;
 	    }
 	}
-	if (matches == feats.length) {
-	    return true;
-	} else {
-	    return false;
-	}
+	return false;
     }
 
     public boolean hasFeatures(Feature[] feats) {

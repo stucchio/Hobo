@@ -6,7 +6,7 @@ import java.util.*;
 public class HasFeaturesBenchmark {
     public static final int NUM_RUNS = 100000;
     public static final int FEATURES_PER_ITEM = 10;
-    public static final int FEATURES_PER_QUERY = 5;
+    public static final int FEATURES_PER_QUERY = 4;
 
     private static Vector<String> randomFeatureSet(int numFeatures) {
 	Vector<String> f = new Vector<String>();
@@ -30,19 +30,19 @@ public class HasFeaturesBenchmark {
 	Item[] items = getItems(NUM_RUNS);
 	Feature[] features = Feature.getFeatures(randomFeatureSet(FEATURES_PER_QUERY));
 
-	long unsortedBeginTime = System.currentTimeMillis();
+	long unsortedBeginTime = System.nanoTime();
 	for (int i=0;i<NUM_RUNS;i++) {
 	    items[i].hasFeatures(features);
 	}
-	double unsortedTime = ((double)(System.currentTimeMillis() - unsortedBeginTime)) / NUM_RUNS;
+	double unsortedTime = ((double)(System.nanoTime() - unsortedBeginTime)) / NUM_RUNS;
 
-	long sortedBeginTime = System.currentTimeMillis();
+	long sortedBeginTime = System.nanoTime();
 	for (int i=0;i<NUM_RUNS;i++) {
 	    items[i].hasFeaturesSorted(features);
 	}
-	double sortedTime = ((double)(System.currentTimeMillis() - sortedBeginTime)) / NUM_RUNS;
+	double sortedTime = ((double)(System.nanoTime() - sortedBeginTime)) / NUM_RUNS;
 	System.out.println("HasFeatures benchmark: ");
-	System.out.println("Unsorted: " + unsortedTime);
-	System.out.println("Sorted:   " + sortedTime);
+	System.out.println("Unsorted: " + unsortedTime + "ns");
+	System.out.println("Sorted:   " + sortedTime + "ns");
     }
 }
