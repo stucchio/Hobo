@@ -55,8 +55,7 @@ public class Item implements Comparable<Item>{
 	int matches = 0;
 	while ((i < features.length) && (j < feats.length)) {
 	    if (feats[j].compareTo(features[i]) < 0) {
-		j++;
-		continue;
+		return false;
 	    }
 	    if (feats[j].compareTo(features[i]) > 0) {
 		i++;
@@ -64,15 +63,16 @@ public class Item implements Comparable<Item>{
 	    }
 	    if (feats[j] == features[i]) {
 		matches++;
-		if (matches == feats.length) {
-		    return true;
-		}
 		j++;
 		i++;
 		continue;
 	    }
 	}
-	return false;
+	if (matches == feats.length) {
+	    return true;
+	} else {
+	    return false;
+	}
     }
 
     public boolean hasFeatures(Feature[] feats) {
