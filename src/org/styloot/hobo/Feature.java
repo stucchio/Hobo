@@ -4,9 +4,13 @@ import java.util.*;
 
 public class Feature implements Comparable<Feature> {
     public final String name;
+    private final int id;
+    private static int currentId;
 
     private Feature(String nm) {
 	name = nm;
+	id = currentId;
+	currentId += 1;
     }
 
     public static Feature getFeature(String nm) {
@@ -42,11 +46,11 @@ public class Feature implements Comparable<Feature> {
     }
 
     public int compareTo(Feature o) {
-	return name.compareTo(o.name);
+	return (id - o.id);
     }
 
     public boolean equals(Object o) {
-	return ((Feature)o).name.equals(name);
+	return (id == ((Feature)o).id);
     }
 
     public static int count() {

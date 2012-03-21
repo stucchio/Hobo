@@ -6,6 +6,7 @@
   <property name="build" location="build/classes" />
   <property name="junit" location="build/classes" />
   <property name="testdir" location="test" />
+  <property name="benchdir" location="benchmarks" />
 
   <path id="classpath">
     <fileset dir="/usr/local/lib/" includes="libthrift-0.8.0.jar" />
@@ -56,6 +57,14 @@
   <target name="jar" depends="compile">
     <jar jarfile="build/hobo.jar" basedir="${build}"/>
   </target>
+
+  <!-- Benchmarks -->
+  <target name="compile-benchmarks" depends="init,thriftcode,jar">
+    <javac srcdir="${benchdir}" destdir="${build}" classpathref="test.classpath" debug="on">
+      <compilerarg value="-Xlint:deprecation"/>
+    </javac>
+  </target>
+
 
   <!-- Unit Tests -->
   <target name="compile-test" depends="init,thriftcode">
