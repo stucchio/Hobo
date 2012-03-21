@@ -61,13 +61,13 @@ public class CIELabColor {
 	return new CIELabColor(( 116. * var_Y ) - 16.0, 500. * ( var_X - var_Y ), 200. * ( var_Y - var_Z ));
     }
 
-    private static double ref_X =  95.047;
-    private static double ref_Y = 100.000;
-    private static double ref_Z = 108.883;
+    private static final double ref_X =  95.047;
+    private static final double ref_Y = 100.000;
+    private static final double ref_Z = 108.883;
 
-    private static double KL = 1;
-    private static double K1 = 0.045;
-    private static double K2 = 0.015;
+    private static final double KL = 1;
+    private static final double K1 = 0.045;
+    private static final double K2 = 0.015;
     public static final double SQRT_REGULARIZATION = 0.00001;
 
     public double distanceTo(CIELabColor other) {
