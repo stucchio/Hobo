@@ -55,8 +55,9 @@ public class ShallowIndexItemFinder implements ItemFinder {
 	//If we have a best feature, just defer to that one's ItemFinder
 	Feature bff = bestFinderFeature(features);
 	if (bff != null) {
-	    features.remove(bff.name);
-	    return featureIndex.get(bff).find(features, color, distance, minPrice, maxPrice);
+	    Vector<String> searchFeatures = new Vector<String>(features);
+	    searchFeatures.remove(bff.name);
+	    return featureIndex.get(bff).find(searchFeatures, color, distance, minPrice, maxPrice);
 	}
 	//Otherwise, we just iterate over our own items.
 	Iterator<Item> iterator = items.iterator();

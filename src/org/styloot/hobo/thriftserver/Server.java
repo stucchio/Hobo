@@ -17,6 +17,7 @@ import java.io.*;
 import org.styloot.hobo.thriftserver.*;
 import org.styloot.hobo.gen.*;
 import org.styloot.hobo.*;
+import org.styloot.hobo.hoboindex.*;
 
 
 public class Server {
@@ -50,8 +51,8 @@ public class Server {
 	infile.close();
 	log.info("Loaded " + items.size() + " items.");
 	log.info("Items are indexed with " + Feature.count() + " features.");
-        HoboIndex index = new HoboIndex(items);
-	log.info("Build HoboIndex.");
+        HoboIndex index = new SimpleHoboIndex(items);
+	log.info("Build SimpleHoboIndex.");
 
 	int port = Integer.parseInt(args[1]);
 	int pageSize = Integer.parseInt(args[2]);

@@ -59,10 +59,14 @@ public class TestItemFinders {
 	int numResults = expectedResultIds.length;
 
 	assertEquals( "Result had wrong number of elements.", numResults, results.size() );
-
-	for (int i=0;i<numResults;i++ ) { //Find should return only items 0, 3, 6, ..., 15, 18
-	    assertEquals( "Found item with wrong id", itemId(expectedResultIds[i]), results.get(i).id );
+	String[] expectedResultIdStr = new String[expectedResultIds.length];
+	String[] actualResultIdStr = new String[expectedResultIds.length];
+	for (int i=0;i<expectedResultIds.length;i++) {
+	    expectedResultIdStr[i] = itemId(expectedResultIds[i]);
+	    actualResultIdStr[i] = results.get(i).id;
 	}
+	assertArrayEquals("Item Id's incorrect", expectedResultIdStr, actualResultIdStr);
+
     }
 
     @Test public void testFindFoo() {

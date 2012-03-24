@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.apache.thrift.TException;
 import org.styloot.hobo.gen.*;
 import org.styloot.hobo.*;
+import org.styloot.hobo.hoboindex.HoboIndex;
 
 import java.util.*;
 

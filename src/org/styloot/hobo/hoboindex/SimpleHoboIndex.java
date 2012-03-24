@@ -1,4 +1,4 @@
-package org.styloot.hobo;
+package org.styloot.hobo.hoboindex;
 
 import java.util.*;
 import java.io.*;
@@ -11,14 +11,15 @@ import org.styloot.hobo.itemfinders.ItemFinder;
 import org.styloot.hobo.itemfinders.ShallowIndexItemFinder;
 import org.styloot.hobo.itemfinders.VectorItemFinder;
 import org.styloot.hobo.iterators.*;
+import org.styloot.hobo.hoboindex.HoboIndex;
 
-public class HoboIndex {
+public class SimpleHoboIndex implements HoboIndex {
     private static final Logger log = LoggerFactory.getLogger(HoboIndex.class);
-    public HoboIndex(Collection<Item> items) {
+    public SimpleHoboIndex(Collection<Item> items) {
 	this(items.iterator());
     }
 
-    public HoboIndex(Iterator<Item> items) {
+    public SimpleHoboIndex(Iterator<Item> items) {
 	Map<String,List<Item>> catToItems = categoriesToItems(items);
 	log.info("Initializing HoboIndex with " + catToItems.size() + " categories.");
 	//Now we need to build ItemFinders
@@ -41,8 +42,8 @@ public class HoboIndex {
 	} else {
 	    categories = categoryMap.values(); //Small performance improvement in case of no category
 	}
-	for (ItemFinder f : categories) {
-	    iters.add(f.find(features, color, dist, minPrice, maxPrice));
+	for (ItemFinder finder : categories) {
+	    iters.add(finder.find(features, color, dist, minPrice, maxPrice));
 	}
 	return new CombinedIterator(iters);
     }
@@ -91,7 +92,7 @@ public class HoboIndex {
 		items.add(new Item("id" + i, "/skirt", f, i, null, i));
 	}
 
-	HoboIndex idx = new HoboIndex(items);
+	HoboIndex idx = new SimpleHoboIndex(items);
 
 	Vector<String> f = new Vector<String>();
 	f.add("foo");
