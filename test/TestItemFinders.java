@@ -72,19 +72,19 @@ public class TestItemFinders {
 	for (int i=0;i<20;i++) {
 	    resultIds[i] = 19-i;
 	}
-	testResults( finder.findItemsWithFeatures( features, 0, Integer.MAX_VALUE),  resultIds);
+	testResults( finder.find( features, null, -1, 0, Integer.MAX_VALUE),  resultIds);
     }
 
     @Test public void testFind2() {
 	Vector<String> features = new Vector<String>();
 	features.add("buz"); //Nonexistent feature
-	testResults( finder.findItemsWithFeatures( features, 0, Integer.MAX_VALUE), new int[]{} );
+	testResults( finder.find( features, null, -1, 0, Integer.MAX_VALUE), new int[]{} );
     }
 
     @Test public void testFindBaz() {
 	Vector<String> features = new Vector<String>();
 	features.add("baz");
-	testResults( finder.findItemsWithFeatures( features, 0, Integer.MAX_VALUE),
+	testResults( finder.find( features, null, -1, 0, Integer.MAX_VALUE),
 		     new int[]{ 18, 15, 12, 9, 6, 3, 0 });
     }
 
@@ -92,14 +92,14 @@ public class TestItemFinders {
 	Vector<String> features = new Vector<String>();
 	features.add("baz");
 	features.add("bar");
-	testResults( finder.findItemsWithFeatures( features, 0, Integer.MAX_VALUE), new int[] { 18, 12, 6, 0 } );
+	testResults( finder.find( features, null, -1, 0, Integer.MAX_VALUE), new int[] { 18, 12, 6, 0 } );
     }
 
     @Test public void testFindByColor() {
 	Vector<String> features = new Vector<String>();
 	CIELabColor baseColor = CIELabColor.CIELabFromRGB(0, 0, 0);
 	double maxColorDist = 4;
-	Iterator<Item> iterator = finder.findItemsWithFeaturesAndColor( features, baseColor, maxColorDist, 0, Integer.MAX_VALUE);
+	Iterator<Item> iterator = finder.find( features, baseColor, maxColorDist, 0, Integer.MAX_VALUE);
 	testResults(iterator, new int[] { 8, 7, 6, 5, 4, 3, 2, 1, 0});
     }
 
@@ -108,7 +108,7 @@ public class TestItemFinders {
 	features.add("bar");
 	CIELabColor baseColor = CIELabColor.CIELabFromRGB(0, 0, 0);
 	double maxColorDist = 4;
-	Iterator<Item> iterator = finder.findItemsWithFeaturesAndColor( features, baseColor, maxColorDist, 0, Integer.MAX_VALUE);
+	Iterator<Item> iterator = finder.find( features, baseColor, maxColorDist, 0, Integer.MAX_VALUE);
 	testResults(iterator, new int[] { 8, 6, 4, 2, 0});
     }
 
@@ -117,7 +117,7 @@ public class TestItemFinders {
 	features.add("bar");
 	CIELabColor baseColor = CIELabColor.CIELabFromRGB(0, 0, 0);
 	double maxColorDist = 4;
-	Iterator<Item> iterator = finder.findItemsWithFeaturesAndColor( features, baseColor, maxColorDist, 0, 3);
+	Iterator<Item> iterator = finder.find( features, baseColor, maxColorDist, 0, 3);
 	testResults(iterator, new int[] { 6, 2, 0}); //Just like testFindByColorFeature, but items[8].cost = 4, and items[4].cost = 5, so they are eliminated
     }
 
@@ -126,7 +126,7 @@ public class TestItemFinders {
 	features.add("bar");
 	CIELabColor baseColor = CIELabColor.CIELabFromRGB(0, 0, 0);
 	double maxColorDist = 4;
-	Iterator<Item> iterator = finder.findItemsWithFeaturesAndColor( features, baseColor, maxColorDist, 4, Integer.MAX_VALUE);
+	Iterator<Item> iterator = finder.find( features, baseColor, maxColorDist, 4, Integer.MAX_VALUE);
 	testResults(iterator, new int[] { 8, 4 }); //Just like testFindByColorFeature, but items[8].cost = 4, and items[4].cost = 5, so they are eliminated
     }
 

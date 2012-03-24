@@ -42,7 +42,7 @@ public class HoboIndex {
 	    categories = categoryMap.values(); //Small performance improvement in case of no category
 	}
 	for (ItemFinder f : categories) {
-	    iters.add(f.findItemsWithFeaturesAndColor(features, color, dist, minPrice, maxPrice));
+	    iters.add(f.find(features, color, dist, minPrice, maxPrice));
 	}
 	return new CombinedIterator(iters);
     }

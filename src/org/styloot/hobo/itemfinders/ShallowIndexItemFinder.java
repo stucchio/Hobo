@@ -51,7 +51,14 @@ public class ShallowIndexItemFinder implements ItemFinder {
 	return items.iterator();
     }
 
-    public Iterator<Item> findItemsWithFeatures(Collection<String> features, int minPrice, int maxPrice) {
+    public Iterator<Item> find(Collection<String> features, CIELabColor color, double distance, int minPrice, int maxPrice) {
+	if (color == null || distance < 0) {
+	    return findItemsWithFeatures(features, minPrice, maxPrice);
+	}
+	return new ColorFilterIterator(findItemsWithFeatures(features, minPrice, maxPrice), color, distance);
+    }
+
+    private Iterator<Item> findItemsWithFeatures(Collection<String> features, int minPrice, int maxPrice) {
 	if (features == null || features.size() == 0) {
 	    return CostFilterIterator.wrap(items.iterator(), minPrice, maxPrice);
 	}
@@ -77,38 +84,6 @@ public class ShallowIndexItemFinder implements ItemFinder {
 	}
 
 	features.remove(bestFeature);
-	return bestFinder.findItemsWithFeatures(features, minPrice, maxPrice);
+	return bestFinder.find(features, null, -1, minPrice, maxPrice);
     };
-
-    public Iterator<Item> findItemsWithFeaturesAndColor(Collection<String> features, CIELabColor color, double distance, int minPrice, int maxPrice) {
-	if (color == null || distance < 0) {
-	    return findItemsWithFeatures(features, minPrice, maxPrice);
-	}
-	return new ColorFilterIterator(findItemsWithFeatures(features, minPrice, maxPrice), color, distance);
-    }
-
-    //Testing
-    public static void main(String[] args) {
-	Vector<Item> items = new Vector<Item>();
-	for (int i=0;i<10;i++) {
-	    Vector<String> f = new Vector<String>();
-	    f.add("foo");
-	    if (i % 2 == 0)
-		f.add("bar");
-	    items.add(new Item("id" + i, "/clothing",	f, i, null, 0));
-	}
-
-	ItemFinder itemFinder = new ShallowIndexItemFinder(items, "clothing");
-	Vector<String> f = new Vector<String>();
-	f.add("bar");
-	int id=8;
-	for (Iterator<Item> iterator = itemFinder.findItemsWithFeatures(f, 0, Integer.MAX_VALUE); iterator.hasNext(); ) {
-	    Item item = (Item)iterator.next();
-	    if (!item.id.equals("id"+id)) {
-		System.out.println("Error - should be id" + id + ", was " + item.id);
-	    }
-	    id -= 2;
-	}
-
-    }
 }
