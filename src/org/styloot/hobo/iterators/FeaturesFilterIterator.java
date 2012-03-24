@@ -12,6 +12,13 @@ public class FeaturesFilterIterator extends FilterIterator {
     }
     private Feature[] features;
 
+    public static Iterator<Item> wrap(Iterator<Item> iterator, Collection<String> features) {
+	if (features != null && features.size() > 0) {
+	    iterator = new FeaturesFilterIterator(iterator, features);
+	}
+	return iterator;
+    }
+
     public boolean predicate(Item item) {
 	return item.hasFeaturesSorted(features); //Better performance, O(n+m) rather than O(N*M)
     }

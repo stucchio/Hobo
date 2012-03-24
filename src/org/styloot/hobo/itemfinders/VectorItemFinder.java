@@ -26,14 +26,8 @@ public class VectorItemFinder implements ItemFinder {
     public Iterator<Item> find(Collection<String> features, CIELabColor color, double distance, int minPrice, int maxPrice) {
 	Iterator<Item> iterator = items.iterator();
 	iterator = CostFilterIterator.wrap(iterator, minPrice, maxPrice);
-
-	if ((features != null) && (features.size() > 0)) {
-	    iterator = new FeaturesFilterIterator(iterator, features);
-	}
-
-	if (color != null && distance > 0) {
-	    iterator = new ColorFilterIterator(iterator, color, distance);
-	}
+	iterator = FeaturesFilterIterator.wrap(iterator, features);
+	iterator = ColorFilterIterator.wrap(iterator, color, distance);
 	return iterator;
     };
 

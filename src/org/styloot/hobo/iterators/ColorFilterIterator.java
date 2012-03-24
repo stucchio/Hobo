@@ -22,6 +22,13 @@ public class ColorFilterIterator extends FilterIterator {
     private final CIELabColor color;
     private final double distanceSquared;
 
+    public static Iterator<Item> wrap(Iterator<Item> iterator, CIELabColor c, double d) {
+	if (c != null && d >= 0)
+	    iterator = new ColorFilterIterator(iterator, c, d);
+	return iterator;
+    }
+
+
     public boolean predicate(Item item) {
 	if (item.color == null) {
 	    return false;

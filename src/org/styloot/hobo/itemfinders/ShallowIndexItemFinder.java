@@ -52,22 +52,29 @@ public class ShallowIndexItemFinder implements ItemFinder {
     }
 
     public Iterator<Item> find(Collection<String> features, CIELabColor color, double distance, int minPrice, int maxPrice) {
-	if (color == null || distance < 0) {
-	    return findItemsWithFeatures(features, minPrice, maxPrice);
+	//If we have a best feature, just defer to that one's ItemFinder
+	Feature bff = bestFinderFeature(features);
+	if (bff != null) {
+	    features.remove(bff.name);
+	    return featureIndex.get(bff).find(features, color, distance, minPrice, maxPrice);
 	}
-	return new ColorFilterIterator(findItemsWithFeatures(features, minPrice, maxPrice), color, distance);
+	//Otherwise, we just iterate over our own items.
+	Iterator<Item> iterator = items.iterator();
+	iterator = CostFilterIterator.wrap(iterator, minPrice, maxPrice);
+	iterator = FeaturesFilterIterator.wrap(iterator, features);
+	iterator = ColorFilterIterator.wrap(iterator, color, distance);
+	return iterator;
     }
 
-    private Iterator<Item> findItemsWithFeatures(Collection<String> features, int minPrice, int maxPrice) {
+    private Feature bestFinderFeature(Collection<String> features) {
+	// Finds the feature corresponding to the ItemFinder with the fewest items.
 	if (features == null || features.size() == 0) {
-	    return CostFilterIterator.wrap(items.iterator(), minPrice, maxPrice);
+	    return null;
 	}
 
-	features = new Vector<String>(features); //Clone this, because we will mutate it later
-
 	int minSize = Integer.MAX_VALUE;
-	ItemFinder bestFinder = this;
-	String bestFeature = null;
+	ItemFinder bestFinder = null;
+	Feature bestFeature = null;
 
 	for (String f : features) {
 	    Feature feature = Feature.getFeature(f);
@@ -75,15 +82,9 @@ public class ShallowIndexItemFinder implements ItemFinder {
  	    if ((finder != null) && (finder.size() < minSize)) {
 		bestFinder = finder;
 		minSize = bestFinder.size();
-		bestFeature = f;
+		bestFeature = feature;
 	    }
 	}
-	if (bestFinder == this) {
-	    Iterator<Item> iterator = CostFilterIterator.wrap(items.iterator(), minPrice, maxPrice);
-	    return new FeaturesFilterIterator(iterator, features);
-	}
-
-	features.remove(bestFeature);
-	return bestFinder.find(features, null, -1, minPrice, maxPrice);
-    };
+	return bestFeature;
+    }
 }
