@@ -13,6 +13,10 @@ public class Feature implements Comparable<Feature> {
 	currentId += 1;
     }
 
+    public int getId() {
+	return id;
+    }
+
     public static Feature getFeature(String nm) {
 	if (!features.containsKey(nm)) {
 	    features.put(nm, new Feature(nm));

@@ -51,6 +51,7 @@ public class TestItemFinders {
 	return Arrays.asList(new Object[][] {
 		new Object[]{ new VectorItemFinder(items, "/baz") },
 		new Object[]{ new ShallowIndexItemFinder(items, "/baz") },
+		new Object[]{ new SubsetIndexItemFinder(items, "/baz") },
 	    });
     }
 
