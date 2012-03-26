@@ -8,13 +8,13 @@ import org.slf4j.LoggerFactory;
 
 import org.styloot.hobo.*;
 import org.styloot.hobo.itemfinders.ItemFinder;
-import org.styloot.hobo.itemfinders.ShallowIndexItemFinder;
+import org.styloot.hobo.itemfinders.SubsetIndexItemFinder;
 import org.styloot.hobo.itemfinders.VectorItemFinder;
 import org.styloot.hobo.iterators.*;
 import org.styloot.hobo.hoboindex.HoboIndex;
 
 public class SimpleHoboIndex implements HoboIndex {
-    private static final Logger log = LoggerFactory.getLogger(HoboIndex.class);
+    private static final Logger log = LoggerFactory.getLogger(SimpleHoboIndex.class);
     public SimpleHoboIndex(Collection<Item> items) {
 	this(items.iterator());
     }
@@ -24,7 +24,7 @@ public class SimpleHoboIndex implements HoboIndex {
 	log.info("Initializing HoboIndex with " + catToItems.size() + " categories.");
 	//Now we need to build ItemFinders
 	for (String cat : catToItems.keySet()) {
-	    categoryMap.put(cat, new ShallowIndexItemFinder(catToItems.get(cat), cat));
+	    categoryMap.put(cat, new SubsetIndexItemFinder(catToItems.get(cat), cat));
 	}
 	log.info("ItemFinders built.");
     }
