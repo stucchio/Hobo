@@ -52,25 +52,4 @@ public class CombinedIterator implements Iterator<Item> {
 	    return item.compareTo(o.item);
 	}
     }
-
-    public static void main(String[] args) {
-	Vector<Vector<Item>> items = new Vector<Vector<Item>>();
-	for (int i=0;i<3;i++) {
-	    items.add(new Vector<Item>());
-	}
-	for (int i=0;i<30;i++) {
-	    items.get(i % 3).add(new Item("id" + i, "baz", new Vector<String>(), i + (i % 5), null, 0));
-	}
-	Vector<Iterator<Item>> iterators = new Vector<Iterator<Item>>();
-	for (int i=0;i<3;i++) {
-	    Collections.sort(items.get(i));
-	    iterators.add(items.get(i).iterator());
-	}
-
-	for (Iterator<Item> i = new CombinedIterator(iterators); i.hasNext(); ) {
-	    Item item = (Item)i.next();
-	    System.out.println(item.id + " -> " + item.quality);
-	}
-
-    }
 }
