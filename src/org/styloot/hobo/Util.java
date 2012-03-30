@@ -1,5 +1,7 @@
 package org.styloot.hobo;
 
+import java.util.*;
+
 public class Util {
     public static boolean isSubsetSorted(Feature[] feats, Feature[] features) {
 	if (feats == null) {
@@ -31,5 +33,13 @@ public class Util {
 	} else {
 	    return false;
 	}
+    }
+
+    public static <T> Collection<T> collectionFromArray(T[] items) {
+	Vector<T> result = new Vector<T>();
+	for (int i=0;i<items.length;i++) {
+	    result.add(items[i]);
+	}
+	return result;
     }
 }

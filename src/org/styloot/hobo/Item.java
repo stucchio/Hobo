@@ -22,6 +22,10 @@ public class Item implements Comparable<Item>{
 	cost = cst;
     }
 
+    public Item(String i, String c, Vector<String> f, int q, CIELabColor clr, int cst) {
+	this(i, c, f.toArray((String[])(new String[]{})), q, clr, cst);
+    }
+
     public boolean hasFeatures(Collection<String> feats) {
 	log.warn("Calling item.hasFeatures(Collection<String> features) - will be inefficient.");
 	if (feats == null) {
