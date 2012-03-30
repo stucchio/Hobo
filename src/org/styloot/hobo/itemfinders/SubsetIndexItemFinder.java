@@ -2,31 +2,49 @@ package org.styloot.hobo.itemfinders;
 
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.styloot.hobo.*;
 import org.styloot.hobo.itemfinders.*;
 import org.styloot.hobo.iterators.*;
 
 public class SubsetIndexItemFinder implements ItemFinder {
+    private static final Logger log = LoggerFactory.getLogger(SubsetIndexItemFinder.class);
+
+    private static int MIN_SUBSET_ITEM_COUNT = 50;
+
     public SubsetIndexItemFinder(Collection<Item> myItems, String cat) {
 	items = new Vector<Item>(myItems);
 	Collections.sort(items);
 	category = cat;
 
 	//First cook up map of FeatureSet to Items
-	Map<FeatureSet,Vector<Item>> featureSetItems = new HashMap<FeatureSet,Vector<Item>>();
+	Map<FeatureSet,Vector<Item>> featuresToItemsMapTemp = new HashMap<FeatureSet,Vector<Item>>();
 	for (Item i : items) {
 	    FeatureSet f = new FeatureSet(i.features);
-	    if (!featureSetItems.containsKey(f)) {
-		featureSetItems.put(f, new Vector<Item>());
+	    if (!featuresToItemsMapTemp.containsKey(f)) {
+		featuresToItemsMapTemp.put(f, new Vector<Item>());
 	    }
-	    featureSetItems.get(f).add(i);
-	}
-	for (FeatureSet f : featureSetItems.keySet()) {
-	    featuresToItemsMap.put(f, new VectorItemFinder(featureSetItems.get(f), cat));
+	    featuresToItemsMapTemp.get(f).add(i);
 	}
 
+	//Filter off small subsets
+	Vector<Item> oddItems = new Vector<Item>();
+	for (FeatureSet f : featuresToItemsMapTemp.keySet()) {
+	    int size = featuresToItemsMapTemp.get(f).size();
+	    if (size < MIN_SUBSET_ITEM_COUNT) {
+		oddItems.addAll(featuresToItemsMapTemp.get(f));
+	    } else {
+		featuresToItemsMap.put(f, featuresToItemsMapTemp.get(f));
+	    }
+	}
+	//Now featuresToItemsMap is created.
+	//Create oddItemsIndex
+	oddItemsFinder = new ShallowIndexItemFinder(oddItems, cat);
+
 	//Now build index of Feature->FeatureSets
-	for (FeatureSet f : featureSetItems.keySet()) {
+	for (FeatureSet f : featuresToItemsMap.keySet()) {
 	    for (Feature feature : f.features) {
 		if (!featureToFeatureSetsMap.containsKey(feature)) {
 		    featureToFeatureSetsMap.put(feature, new HashSet<FeatureSet>());
@@ -38,13 +56,20 @@ public class SubsetIndexItemFinder implements ItemFinder {
 	    Collection<FeatureSet> featureSets = featureToFeatureSetsMap.get(feature);
 	    featureToFeatureSetsMap.put(feature, new Vector<FeatureSet>(featureSets));
 	}
+	log.info("Created SubsetIndexItemFinder for " + category + " with " + numSubsets() + " subsets, " + size() + " items and " + oddItemsFinder.size() + " odd items.");
     }
 
     private Vector<Item> items;
     private String category;
 
+    private final ShallowIndexItemFinder oddItemsFinder;
+
     public int size() {
 	return items.size();
+    }
+
+    public int numSubsets() {
+	return featuresToItemsMap.size();
     }
 
     public Iterator<Item> getItems() {
@@ -56,10 +81,14 @@ public class SubsetIndexItemFinder implements ItemFinder {
 	    return findNoFeatures(color, distance, minPrice, maxPrice);
 	}
 	Vector<Iterator<Item>> iterators = new Vector<Iterator<Item>>();
+	//Make sure iterators contains oddItems
+	iterators.add( oddItemsFinder.find(featuresAsStrings, color, distance, minPrice, maxPrice) );
+
 	Feature[] features = Feature.getFeatures(featuresAsStrings);
 
 	for (FeatureSet f : getFeatureSetsContainingFeature(features)) {
-	    iterators.add( featuresToItemsMap.get(f).find(null, color, distance, minPrice, maxPrice) );
+	    Iterator<Item> iterator = featuresToItemsMap.get(f).iterator();
+	    iterators.add( filterCostColor(iterator, color, distance, minPrice, maxPrice) );
 	}
 	if (iterators.size() > 1) {
 	    return new CombinedIterator(iterators);
@@ -74,11 +103,14 @@ public class SubsetIndexItemFinder implements ItemFinder {
 	};
     };
 
-    private Iterator<Item> findNoFeatures(CIELabColor color, double distance, int minPrice, int maxPrice) {
-	Iterator<Item> iterator = getItems();
+    private Iterator<Item> filterCostColor(Iterator<Item> iterator, CIELabColor color, double distance, int minPrice, int maxPrice) {
 	iterator = CostFilterIterator.wrap(iterator, minPrice, maxPrice);
 	iterator = ColorFilterIterator.wrap(iterator, color, distance);
 	return iterator;
+    }
+
+    private Iterator<Item> findNoFeatures(CIELabColor color, double distance, int minPrice, int maxPrice) {
+	return filterCostColor(getItems(), color, distance, minPrice, maxPrice);
     }
 
     private Collection<FeatureSet> getFeatureSetsContainingFeature(Feature[] features) {
@@ -113,7 +145,7 @@ public class SubsetIndexItemFinder implements ItemFinder {
 	return result;
     }
 
-    private final Map<FeatureSet,VectorItemFinder> featuresToItemsMap = new HashMap<FeatureSet,VectorItemFinder>();
+    private final Map<FeatureSet,Vector<Item>> featuresToItemsMap = new HashMap<FeatureSet,Vector<Item>>();
 
     private final Map<Feature,Collection<FeatureSet>> featureToFeatureSetsMap = new HashMap<Feature,Collection<FeatureSet>>();
 

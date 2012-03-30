@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.styloot.hobo.*;
 import org.styloot.hobo.itemfinders.ItemFinder;
 import org.styloot.hobo.itemfinders.SubsetIndexItemFinder;
-import org.styloot.hobo.itemfinders.VectorItemFinder;
+import org.styloot.hobo.itemfinders.*;
 import org.styloot.hobo.iterators.*;
 import org.styloot.hobo.hoboindex.HoboIndex;
 
@@ -17,6 +17,10 @@ public class SimpleHoboIndex implements HoboIndex {
     private static final Logger log = LoggerFactory.getLogger(SimpleHoboIndex.class);
     public SimpleHoboIndex(Collection<Item> items) {
 	this(items.iterator());
+    }
+
+    public SimpleHoboIndex(Item[] items) {
+	this(Util.collectionFromArray(items));
     }
 
     public SimpleHoboIndex(Iterator<Item> items) {
