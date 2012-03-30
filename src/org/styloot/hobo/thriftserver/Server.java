@@ -1,6 +1,5 @@
 package org.styloot.hobo.thriftserver;
 
-import java.io.IOException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TBinaryProtocol.Factory;
 import org.apache.thrift.server.TServer;
@@ -13,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.io.*;
+import java.io.IOException;
 
 import org.styloot.hobo.thriftserver.*;
 import org.styloot.hobo.gen.*;
