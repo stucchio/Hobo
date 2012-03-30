@@ -13,7 +13,9 @@ public class CombinedIterator implements Iterator<Item> {
      */
     public CombinedIterator(Collection<Iterator<Item>> iters) {
 	for (Iterator<Item> iter : iters) {
-	    if (iter.hasNext()) {
+	    if (iter instanceof CombinedIterator) {
+		addCombinedIterator( (CombinedIterator)iter );
+	    } else if (iter.hasNext()) {
 		queue.add(new ItemIteratorPair(iter.next(), iter));
 	    }
 	}
@@ -38,6 +40,15 @@ public class CombinedIterator implements Iterator<Item> {
 
     public void remove() {
 	throw new UnsupportedOperationException("Remove not implemented");
+    }
+
+    //This is destructive on it's argument
+    private void addCombinedIterator(CombinedIterator iterator) {
+	Iterator<ItemIteratorPair> pairIterator = iterator.queue.iterator();
+	while (pairIterator.hasNext()) {
+	    ItemIteratorPair pair = pairIterator.next();
+	    queue.add(pair);
+	}
     }
 
     private static class ItemIteratorPair implements Comparable<ItemIteratorPair> {
