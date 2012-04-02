@@ -6,8 +6,11 @@ import org.styloot.hobo.*;
 
 public class CombinedIterator implements Iterator<Item> {
     /*Contract:
+      The CombinedIterator takes a collection of item iterators and returns a single iterator which contains the
+      output of all the input iterators.
 
-      Precondition: The iters used to create this iterator are sorted according to item.quality (highest first).
+      Precondition: The iterators used to create this iterator are sorted according to item.quality (highest first).
+      I.e., repeated calls to iterator.next() result in items of lower quality.
 
       If this precondition is met, then the output of the CombinedIterator will also be sorted by item.quality.
      */
